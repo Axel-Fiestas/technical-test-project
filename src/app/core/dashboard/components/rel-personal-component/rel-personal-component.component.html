@@ -1,0 +1,86 @@
+
+<h1 nz-typography>Relación de Personal</h1>
+<p>Aquí puedes revisar tu registro de ingresos y salidas</p>
+<h2 nz-typography>Búsqueda</h2>
+
+<form nz-form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+
+  <div nz-row [nzGutter]="24">
+
+    <div nz-col [nzSpan]="8">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="'vertical'" >Puesto o Código</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="cargo" placeholder="Ej. Director de Oficina" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col [nzSpan]="8">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="'vertical'">Nombres y Apellidos o DNI</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="nombresDNI" placeholder="Ej. Ortiz" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col [nzSpan]="8">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="'vertical'">Centro</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="centro" nzPlaceHolder="Selecciona un centro" >
+            <nz-option *ngFor="let centro of centros" [nzLabel]="centro" [nzValue]="centro"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+  </div>
+
+  <div nz-row>
+    <div nz-col [nzSpan]="24" class="search-area">
+      <button nz-button [nzType]="'primary'" type="submit">Buscar</button>
+      <button nz-button (click)="onReset()">Limpiar</button>
+    </div>
+  </div>
+</form>
+
+<h2 nz-typography>Resultados</h2>
+<div *ngIf="hasResults; else nothing">
+  <nz-table #basicTable [nzData]="filteredPersonalData">
+    <thead>
+    <tr>
+      <th>Desc. del Cargo</th>
+      <th>Nombres</th>
+      <th>Nro Doc.</th>
+      <th>Centro</th>
+      <th>Estado</th>
+      <th>Opciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{ data.cargo }}</td>
+      <td>{{ data.nombres }}</td>
+      <td>{{ data.nroDoc }}</td>
+      <td>{{ data.centro }}</td>
+      <td>
+        <span [ngClass]="{'activo': data.estado === 'Activo', 'inactivo': data.estado === 'Inactivo'}">
+          {{ data.estado | uppercase}}
+        </span>
+      </td>
+      <td>
+        <a>
+          <span nz-icon nzType="eye"></span>
+        </a>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+</div>
+
+<ng-template #nothing>
+  <div *ngIf="!hasResults"> <nz-empty></nz-empty> </div>
+</ng-template>
+
